@@ -75,7 +75,7 @@
             transform: translateY(0);
         }
 
-        /* ===== ЗАСТАВКА С КОНВЕРТОМ ===== */
+/* ===== ЗАСТАВКА С КОНВЕРТОМ ===== */
 .envelope-screen {
     position: fixed;
     inset: 0;
@@ -94,7 +94,7 @@
 
 .envelope {
     position: relative;
-    width: 100%; /* Зам��нили 100vw на 100%, чтобы не было горизонтальной прокрутки */
+    width: 100%; /* Зам  нили 100vw на 100%, чтобы не было горизонтальной прокрутки */
     height: 100dvh; /* Используем dvh - динамическая высота экрана для телефонов */
     max-width: 640px;
     max-height: 900px;
@@ -474,77 +474,110 @@
         }
 
         /* ===== КАЛЕНДАРЬ ===== */
-        .calendar-section {
-            padding: 5rem 1.5rem 6rem;
-            text-align: center;
-            background: var(--bg-color);
-        }
+.calendar-section {
+    padding: 5rem 1.5rem 6rem;
+    text-align: center;
+    background: var(--bg-color);
+}
 
-        .calendar-title {
-            font-size: 3.5rem;
-            color: var(--text-color);
-            margin-bottom: 2.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
+.calendar-title {
+    font-size: 3.5rem;
+    color: var(--text-color);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
 
-        .calendar-month {
-            font-size: 1.4rem;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: var(--main-brown);
-            margin-bottom: 2.5rem;
-            text-transform: uppercase;
-        }
+.calendar-month {
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--main-brown);
+    margin-bottom: 2.5rem;
+    text-transform: uppercase;
+}
 
-        .calendar-grid {
-            max-width: 500px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(7,1fr);
-            gap: 1rem;
-            font-weight: 300;
-        }
+.calendar-grid {
+    max-width: 500px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+    font-weight: 300;
+}
 
-        .calendar-weekday {
-            font-size: 1.1rem;
-            font-weight: 500;
-            padding: 0.5rem;
-            color: var(--text-color);
-        }
+.calendar-weekday {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.5rem;
+    color: var(--text-color);
+}
 
-        .calendar-weekday.weekend {
-            color: #B85353;
-            font-weight: 600 !important;
-        }
+.calendar-weekday.weekend {
+    color: #B85353;
+    font-weight: 600 !important;
+}
 
-        .calendar-day {
-            font-size: 1.3rem;
-            padding: 0.8rem 0.5rem;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.calendar-day {
+    font-size: 1.3rem;
+    padding: 0.8rem 0.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .calendar-day.active {
-            color: var(--main-brown);
-            font-weight: 600;
-            position: relative;
-        }
+.calendar-day.active {
+    color: var(--main-brown);
+    font-weight: 600;
+    position: relative;
+}
 
-        .diamond-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 52px;
-            height: 52px;
-            z-index: 0;
-            pointer-events: none;
-        }
+.diamond-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 52px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ===== ЖЕМЧУЖИНЫ ===== */
+.pearl {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f0f0f0 60%, #d8d8d8 100%);
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(255,255,255,0.6), inset -2px -2px 5px rgba(0,0,0,0.1);
+    pointer-events: none;
+    z-index: 99999; /* Чтобы падали поверх всего */
+}
+
+/* Мобильная адаптация календаря */
+@media(max-width: 480px) {
+    .calendar-grid {
+        gap: 0.3rem; /* Уменьшаем зазоры, чтобы влезло */
+    }
+
+    .calendar-day {
+        font-size: 1rem;
+        padding: 0.6rem 0.2rem;
+    }
+
+    .diamond-ring {
+        width: 38px; /* Уменьшаем кольцо */
+        height: 38px;
+    }
+
+    .calendar-month {
+        font-size: 1.2rem;
+    }
+}
 
         /* ===== ЛОКАЦИЯ ===== */
         .location-section {
@@ -1027,26 +1060,41 @@
             transition: all 0.3s ease;
         }
 
-        .secret-message {
-            display: none;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-        }
+/* Секретное сообщение после отправки анкеты */
+.secret-message {
+    display: none;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(232, 213, 192, 0.2);
+    border-radius: 12px;
+}
 
-        .secret-message.visible {
-            display: block;
-            animation: fadeInUp 0.8s ease;
-        }
+.secret-message.visible {
+    display: block;
+    animation: fadeInUp 0.8s ease;
+}
 
-        .secret-title {
-            font-size: 3.8rem;
-            color: #E8D5C0;
-            margin-bottom: 1rem;
-        }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.secret-title {
+    font-size: 3.8rem;
+    font-family: 'Great Vibes', cursive;
+    color: #E8D5C0; /* Светло-кремовый заголовок */
+    margin-bottom: 1rem;
+}
+
+.secret-text {
+    font-size: 1.15rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #F5EDE4; /* Очень светлый текст */
+}
 
         /* ===== ТАЙМЕР ОБРАТНОГО ОТСЧЁТА ===== */
         .countdown-section {
