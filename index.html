@@ -623,12 +623,11 @@
         /* ===== ADD TO CALENDAR BUTTON ===== */
 .add-calendar-wrapper {
     margin-top: 2.5rem;
+    text-align: center;
 }
 
 .btn-calendar {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
+    display: inline-block;
     background: transparent;
     border: 1px solid var(--light-brown);
     color: var(--main-brown);
@@ -638,14 +637,12 @@
     font-weight: 300;
     letter-spacing: 2px;
     text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.3s ease;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .btn-calendar:hover {
     background: rgba(107, 66, 38, 0.08);
-    transform: translateY(-2px);
 }
 
         /* ===== ЛОКАЦИЯ ===== */
@@ -1675,7 +1672,7 @@ textarea::placeholder {
 
     <div class="add-calendar-wrapper">
     <button type="button" id="addToCalendarBtn" class="btn-calendar">
-        📅 Добавить в календарь
+         Добавить в календарь
     </button>
 </div>
 </section>
@@ -2148,53 +2145,6 @@ textarea::placeholder {
         });
     });
 
-// ===== ДОБАВИТЬ В КАЛЕНДАРЬ ТЕЛЕФОНА =====
-document.getElementById('addToCalendarBtn').addEventListener('click', function() {
-    const event = {
-        title: 'Свадьба Александры и Олега',
-        start: '2026-09-05T15:00:00',
-        end: '2026-09-05T23:00:00',
-        location: 'Усадьба Eden, Минский район, агрогородок Сеница, Набережная улица 1',
-        description: 'Приглашаем на нашу свадьбу! Пожалуйста, подтвердите присутствие.'
-    };
-    
-    // Создаём .ics файл
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Wedding//EN
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-UID:${Date.now()}@wedding.com
-DTSTAMP:${formatICSDate(new Date())}
-DTSTART:${formatICSDate(new Date(event.start))}
-DTEND:${formatICSDate(new Date(event.end))}
-SUMMARY:${event.title}
-LOCATION:${event.location}
-DESCRIPTION:${event.description}
-END:VEVENT
-END:VCALENDAR`;
-    
-    // Создаём blob и скачиваем
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'wedding.ics';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Удаляем ссылку через 1 секунду
-    setTimeout(() => {
-        URL.revokeObjectURL(link.href);
-    }, 1000);
-});
-
-// Форматирование даты для .ics
-function formatICSDate(date) {
-    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-}
-
     // ===== COUNTDOWN TIMER =====
     const weddingDate = new Date("September 5, 2026 15:00:00").getTime();
 
@@ -2464,6 +2414,57 @@ ${presenceEmoji} *Присутствие:* ${presenceText}
     document.addEventListener('DOMContentLoaded', function() {
         updateGreeting();
     });
+    // ===== ДОБАВИТЬ В КАЛЕНДАРЬ =====
+const calendarBtn = document.getElementById('addToCalendarBtn');
+if (calendarBtn) {
+    calendarBtn.addEventListener('click', function() {
+        console.log('Кнопка календаря нажата!'); // Проверка
+        
+        const event = {
+            title: 'Свадьба Александры и Олега',
+            start: '2026-09-05T15:00:00',
+            end: '2026-09-05T23:00:00',
+            location: 'Усадьба Eden, Минский район, агрогородок Сеница, Набережная улица 1',
+            description: 'Приглашаем на нашу свадьбу! Пожалуйста, подтвердите присутствие.'
+        };
+        
+        // Создаём .ics файл
+        const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding//EN
+BEGIN:VEVENT
+UID:${Date.now()}@wedding.com
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART:${formatICSDate(new Date(event.start))}
+DTEND:${formatICSDate(new Date(event.end))}
+SUMMARY:${event.title}
+LOCATION:${event.location}
+DESCRIPTION:${event.description}
+END:VEVENT
+END:VCALENDAR`;
+        
+        // Скачиваем файл
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'wedding.ics';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log('Файл скачан!'); // Проверка
+        
+        // Удаляем ссылку через 1 секунду
+        setTimeout(() => {
+            URL.revokeObjectURL(link.href);
+        }, 1000);
+    });
+}
+
+// Форматирование даты
+function formatICSDate(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+}
 </script>
 </body>
 </html>
