@@ -1268,31 +1268,108 @@
         html {
             scroll-behavior: smooth;
         }
+        /* Обёртка, чтобы подсказка позиционировалась относительно конверта */
+.envelope-stage{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 640px;
+    max-height: 900px;
+    margin: auto;
+}
+
+/* Подсказка под печатью */
+.open-hint{
+    position: absolute;
+    left: 50%;
+    top: 47%;                 /* совпадает с .seal top:47% */
+    transform: translateX(-50%);
+    margin-top: 115px;        /* опускаем ниже печати */
+    text-align: center;
+    pointer-events: none;     /* чтобы не мешала клику по печати */
+    z-index: 8;
+    color: #4A2C2A;           /* шоколадный */
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.18));
+}
+
+/* Текст */
+.open-hint__text{
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+/* Стрелка вверх к печати */
+.open-hint__arrow{
+    width: 2px;
+    height: 58px;
+    background: rgba(74,44,42,0.55);
+    margin: 14px auto 0;
+    position: relative;
+    animation: hintFloat 1.7s ease-in-out infinite;
+}
+
+/* Наконечник стрелки */
+.open-hint__arrow::before{
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    border-left: 2px solid rgba(74,44,42,0.55);
+    border-top: 2px solid rgba(74,44,42,0.55);
+    transform: translateX(-50%) rotate(45deg);
+}
+
+/* Лёгкая “пульсация” */
+@keyframes hintFloat{
+    0%,100%{ transform: translateY(0); opacity: 0.55; }
+    50%{ transform: translateY(-6px); opacity: 0.95; }
+}
+
+/* Когда конверт открыт — подсказку прячем */
+.envelope.open ~ .open-hint{
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+/* Мобилка — подстройка */
+@media (max-width: 480px){
+    .open-hint{ margin-top: 95px; }
+    .open-hint__text{ font-size: 0.8rem; letter-spacing: 0.18em; }
+    .open-hint__arrow{ height: 48px; }
+}
     </style>
 </head>
 
 <body>
-<!-- ============================================ -->
-<!-- ===== ЗАСТАВКА С КОНВЕРТОМ (НАЧАЛО) ===== -->
-<!-- ============================================ -->
 <div class="envelope-screen" id="envelopeScreen">
-    <div class="envelope" id="envelope">
-        <div class="envelope-body"></div>
-        <div class="envelope-flap">
-            <div class="envelope-text">
-                <div class="envelope-initials">А&О</div>
-                <div class="envelope-date">05.09.2026</div>
+    <div class="envelope-stage">
+        <div class="envelope" id="envelope">
+            <div class="envelope-body"></div>
+
+            <div class="envelope-flap">
+                <div class="envelope-text">
+                    <div class="envelope-initials">А&О</div>
+                    <div class="envelope-date">05.09.2026</div>
+                </div>
             </div>
+
+            <div class="letter"></div>
+
+            <img src="images/печать.png" alt="Печать" class="seal" id="waxSeal">
         </div>
-        
-        <div class="letter"></div>
-        
-        <img src="images/печать.png" alt="Печать" class="seal" id="waxSeal">
+
+        <!-- ПОДСКАЗКА ПОД ПЕЧАТЬЮ -->
+        <div class="open-hint" aria-hidden="true">
+            <div class="open-hint__text">Открыть письмо</div>
+            <div class="open-hint__arrow"></div>
+        </div>
     </div>
 </div>
-<!-- ============================================ -->
-<!-- ===== ЗАСТАВКА С КОНВЕРТОМ (КОНЕЦ) ===== -->
-<!-- ============================================ -->
 
 <!-- ===== ОСНОВНОЙ КОНТЕНТ САЙТА ===== -->
 <div class="main-content" id="mainContent">
