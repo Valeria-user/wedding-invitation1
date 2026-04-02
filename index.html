@@ -621,38 +621,32 @@
 }
 
         /* ===== ADD TO CALENDAR BUTTON ===== */
-        .add-calendar-wrapper {
-            margin-top: 2.5rem;
-        }
+.add-calendar-wrapper {
+    margin-top: 2.5rem;
+}
 
-        .add-calendar-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            background: transparent;
-            border: 1px solid var(--light-brown);
-            color: var(--main-brown);
-            padding: 0.8rem 1.8rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-        }
+.btn-calendar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: transparent;
+    border: 1px solid var(--light-brown);
+    color: var(--main-brown);
+    padding: 0.8rem 1.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
-        .add-calendar-btn:hover {
-            background: rgba(107, 66, 38, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .add-calendar-btn svg {
-            width: 18px;
-            height: 18px;
-        }
+.btn-calendar:hover {
+    background: rgba(107, 66, 38, 0.08);
+    transform: translateY(-2px);
+}
 
         /* ===== ЛОКАЦИЯ ===== */
         .location-section {
@@ -1679,19 +1673,11 @@ textarea::placeholder {
         <div class="calendar-day">30</div>
     </div>
 
-    <div class="add-calendar-wrapper reveal">
-        <button class="add-calendar-btn" id="addToCalendarBtn" aria-label="Добавить событие в календарь">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-                <line x1="12" y1="14" x2="12" y2="18"></line>
-                <line x1="10" y1="16" x2="14" y2="16"></line>
-            </svg>
-            Добавить в календарь
-        </button>
-    </div>
+    <div class="add-calendar-wrapper">
+    <button type="button" id="addToCalendarBtn" class="btn-calendar">
+        📅 Добавить в календарь
+    </button>
+</div>
 </section>
 
 <!-- ЛОКАЦИЯ -->
@@ -2162,22 +2148,52 @@ textarea::placeholder {
         });
     });
 
-    // ===== ADD TO CALENDAR =====
-    const calendarBtn = document.getElementById('addToCalendarBtn');
-    if (calendarBtn) {
-        calendarBtn.addEventListener('click', () => {
-            const event = {
-                title: 'Свадьба',
-                start: '20260905T150000',
-                end: '20260906T020000',
-                location: 'Усадьба Eden, Минский район, агрогородок Сеница, Набережная улица 1',
-                details: 'Приглашаем на нашу свадьбу!'
-            };
+// ===== ДОБАВИТЬ В КАЛЕНДАРЬ ТЕЛЕФОНА =====
+document.getElementById('addToCalendarBtn').addEventListener('click', function() {
+    const event = {
+        title: 'Свадьба Александры и Олега',
+        start: '2026-09-05T15:00:00',
+        end: '2026-09-05T23:00:00',
+        location: 'Усадьба Eden, Минский район, агрогородок Сеница, Набережная улица 1',
+        description: 'Приглашаем на нашу свадьбу! Пожалуйста, подтвердите присутствие.'
+    };
+    
+    // Создаём .ics файл
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${Date.now()}@wedding.com
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART:${formatICSDate(new Date(event.start))}
+DTEND:${formatICSDate(new Date(event.end))}
+SUMMARY:${event.title}
+LOCATION:${event.location}
+DESCRIPTION:${event.description}
+END:VEVENT
+END:VCALENDAR`;
+    
+    // Создаём blob и скачиваем
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'wedding.ics';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Удаляем ссылку через 1 секунду
+    setTimeout(() => {
+        URL.revokeObjectURL(link.href);
+    }, 1000);
+});
 
-            const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
-            window.open(googleUrl, '_blank');
-        });
-    }
+// Форматирование даты для .ics
+function formatICSDate(date) {
+    return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+}
 
     // ===== COUNTDOWN TIMER =====
     const weddingDate = new Date("September 5, 2026 15:00:00").getTime();
