@@ -2283,77 +2283,102 @@ textarea::placeholder {
     });
 });
 
-    // ===== ОТПРАВКА ФОРМЫ В TELEGRAM =====
-    const rsvpForm = document.getElementById('rsvpForm');
-    
-    if (rsvpForm) {
-        rsvpForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = this.querySelector('.btn-send');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Отправка...';
-            
-            // Собираем данные
-            const presence = document.querySelector('input[name="presence"]:checked')?.value || '';
-            
-            // Выбранные гости
-            const selectedGuests = Array.from(document.querySelectorAll('input[name="guest"]:checked'))
+// ===== ОТПРАВКА ФОРМЫ В TELEGRAM =====
+const rsvpForm = document.getElementById('rsvpForm');
+
+if (rsvpForm) {
+    rsvpForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitBtn = this.querySelector('.btn-send');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправка...';
+        
+        // Собираем данные
+        const presence = document.querySelector('input[name="presence"]:checked')?.value || '';
+        
+        // Выбранные гости (только если чекбоксы видны)
+        let selectedGuests = '';
+        const guestsList = document.getElementById('guestsList');
+        
+        if (guestsList && guestsList.style.display !== 'none') {
+            // Чекбоксы видимы — берем выбранные
+            selectedGuests = Array.from(document.querySelectorAll('input[name="guest"]:checked'))
                 .map(cb => cb.value)
                 .join(', ');
-            
-            // Трансфер
-            const transfer = document.querySelector('input[name="transfer"]:checked')?.value || '';
-            
-            // Алкоголь
-            const alcoholChoices = Array.from(document.querySelectorAll('input[name="alcohol"]:checked'))
-                .map(cb => {
-                    const labels = {
-                        'champagne': 'Шампанское',
-                        'wine_white': 'Белое вино',
-                        'wine_red': 'Красное вино',
-                        'vodka': 'Водка',
-                        'whiskey': 'Виски',
-                        'cognac': 'Коньяк',
-                        'non_alcoholic': 'Безалкогольное'
-                    };
-                    return labels[cb.value] || cb.value;
-                })
-                .join(', ');
-            
-            // Комментарий
-            const comment = document.getElementById('comment')?.value || '';
-            
-            // Формируем красивое сообщение
-            let presenceText, presenceEmoji;
-            if (presence === 'yes') {
-                presenceText = 'Да, будут';
-                presenceEmoji = '✅';
-            } else if (presence === 'maybe') {
-                presenceText = 'Возможно';
-                presenceEmoji = '❓';
-            } else {
-                presenceText = 'Не смогут';
-                presenceEmoji = '❌';
+        } else {
+            // Чекбоксы скрыты — используем всех гостей из URL
+            selectedGuests = guestNames.join(', ');
+        }
+        
+        // Если гостей нет — пишем "Не указано"
+        if (!selectedGuests) {
+            selectedGuests = 'Не указано';
+        }
+        
+        // Трансфер (только если видимый)
+        const transferQuestion = document.getElementById('transferQuestion');
+        let transfer = '';
+        
+        if (transferQuestion && transferQuestion.style.display !== 'none') {
+            transfer = document.querySelector('input[name="transfer"]:checked')?.value || '';
+        }
+        
+        // Алкоголь (только если видимый)
+        const alcoholQuestion = document.getElementById('alcoholQuestion');
+        let alcoholChoices = '';
+        
+        if (alcoholQuestion && alcoholQuestion.style.display !== 'none') {
+            const alcoholInputs = document.querySelectorAll('input[name="alcohol"]:checked');
+            if (alcoholInputs.length > 0) {
+                alcoholChoices = Array.from(alcoholInputs)
+                    .map(cb => {
+                        const labels = {
+                            'champagne': 'Шампанское',
+                            'wine_white': 'Белое вино',
+                            'wine_red': 'Красное вино',
+                            'vodka': 'Водка',
+                            'whiskey': 'Виски',
+                            'cognac': 'Коньяк',
+                            'non_alcoholic': 'Безалкогольное'
+                        };
+                        return labels[cb.value] || cb.value;
+                    })
+                    .join(', ');
             }
-            
-            let transferText;
-            if (transfer === 'yes') {
-                transferText = '✅ Да, нужен';
-            } else if (transfer === 'no') {
-                transferText = '❌ Нет, приедут сами';
-            } else if (transfer === 'one_way') {
-                transferText = '↔️ В одну сторону';
-            } else {
-                transferText = '—';
-            }
-            
-            const guestsText = selectedGuests || guestNames.join(', ') || 'Не указано';
-            
-            const message = `
+        }
+        
+        // Комментарий
+        const comment = document.getElementById('comment')?.value || '';
+        
+        // Формируем красивое сообщение
+        let presenceText, presenceEmoji;
+        if (presence === 'yes') {
+            presenceText = 'Да, будут';
+            presenceEmoji = '✅';
+        } else if (presence === 'maybe') {
+            presenceText = 'Возможно';
+            presenceEmoji = '❓';
+        } else {
+            presenceText = 'Не смогут';
+            presenceEmoji = '❌';
+        }
+        
+        let transferText;
+        if (transfer === 'yes') {
+            transferText = '✅ Да, нужен';
+        } else if (transfer === 'no') {
+            transferText = '❌ Нет, приедут сами';
+        } else if (transfer === 'one_way') {
+            transferText = '↔️ В одну сторону';
+        } else {
+            transferText = '—';
+        }
+        
+        const message = `
 🎉 *НОВАЯ АНКЕТА*
 
-👥 *Гости:* ${guestsText}
+👥 *Гости:* ${selectedGuests}
 
 ${presenceEmoji} *Присутствие:* ${presenceText}
 
@@ -2364,60 +2389,60 @@ ${presenceEmoji} *Присутствие:* ${presenceText}
 💬 *Комментарий:* ${comment || '—'}
 
 📅 *Дата:* ${new Date().toLocaleString('ru-RU')}
-            `.trim();
+        `.trim();
+        
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            });
             
-            try {
-                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        chat_id: TELEGRAM_CHAT_ID,
-                        text: message,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                
-                // Скрываем форму
-                document.getElementById('rsvp-form').style.display = 'none';
-                const secretMessage = document.getElementById('secretMessage');
-                secretMessage.classList.add('visible');
-                
-                // Меняем текст благодарности
-                const thankYouText = document.getElementById('thankYouText');
-                if (thankYouText) {
-                    if (presence === 'yes') {
-                        thankYouText.innerHTML = 'Мы получили ваш ответ<br>и очень ждём встречи с вами!';
-                    } else if (presence === 'maybe') {
-                        thankYouText.innerHTML = 'Спасибо за ответ!<br>Ждём вашего подтверждения.';
-                    } else {
-                        thankYouText.innerHTML = 'Нам очень жаль,<br>что вы не сможете присутствовать.<br>Будем скучать!';
-                    }
+            // Скрываем форму
+            document.getElementById('rsvp-form').style.display = 'none';
+            const secretMessage = document.getElementById('secretMessage');
+            secretMessage.classList.add('visible');
+            
+            // Меняем текст благодарности
+            const thankYouText = document.getElementById('thankYouText');
+            if (thankYouText) {
+                if (presence === 'yes') {
+                    thankYouText.innerHTML = 'Мы получили ваш ответ<br>и очень ждём встречи с вами!';
+                } else if (presence === 'maybe') {
+                    thankYouText.innerHTML = 'Спасибо за ответ!<br>Ждём вашего подтверждения.';
+                } else {
+                    thankYouText.innerHTML = 'Нам очень жаль,<br>что вы не сможете присутствовать.<br>Будем скучать!';
                 }
-                
-                // Конфетти при "да"
-                if (presence === 'yes' && typeof confetti === 'function') {
-                    confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
-                }
-                
-                // Прокрутка к сообщению
-                setTimeout(() => {
-                    secretMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-                
-            } catch (error) {
-                console.error('Ошибка отправки:', error);
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Отправить ответ';
-                alert('Произошла ошибка. Попробуйте ещё раз или свяжитесь с нами по телефону.');
             }
-        });
-    }
+            
+            // Конфетти при "да"
+            if (presence === 'yes' && typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+            
+            // Прокрутка к сообщению
+            setTimeout(() => {
+                secretMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+            
+        } catch (error) {
+            console.error('Ошибка отправки:', error);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Отправить ответ';
+            alert('Произошла ошибка. Попробуйте ещё раз или свяжитесь с нами по телефону.');
+        }
+    });
+}
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     document.addEventListener('DOMContentLoaded', function() {
