@@ -390,12 +390,13 @@
 
 /* ===== ФОТО ===== */
 .photo-section {
-    padding: 4rem 1.5rem 6rem;
+    padding: 3rem 1rem 5rem; /* Уменьшенные отступы для мобильных */
     display: flex;
     justify-content: center;
     align-items: center;
     background: var(--choco);
     position: relative;
+    min-height: 50vh; /* Минимальная высота секции */
 }
 
 /* Убираем угловые рамки */
@@ -406,13 +407,18 @@
 .photo-wrapper {
     position: relative;
     display: inline-block;
-    opacity: 1;
-    transform: translateY(0);
+    width: 100%;
+    text-align: center;
+    /* Мгновенное появление без задержки */
+    opacity: 1 !important;
+    transform: none !important;
 }
 
-/* Анимация только при скролле */
-.photo-wrapper.animate {
-    animation: fadeInUp 0.5s ease;
+/* Убираем анимацию */
+.photo-wrapper.animate,
+.photo-wrapper.visible {
+    opacity: 1 !important;
+    transform: none !important;
 }
 
 @keyframes fadeInUp {
@@ -426,22 +432,27 @@
     }
 }
 
-.photo-wrapper.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 .photo-wrapper img {
-    height: 85vh;
-    width: auto;
-    max-width: 88vw;
+    height: auto;
+    max-height: 70vh; /* Уменьшил для мобильных */
+    width: 90vw; /* Почти весь экран */
+    max-width: 400px; /* Ограничение ширины */
     object-fit: contain;
     display: block;
+    margin: 0 auto;
     position: relative;
     z-index: 2;
-    border-radius: 45% 45% 0 0 / 45% 45% 0 0;
-    border: 8px solid white; /* Белый ободок */
-    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    
+    /* ВЕРТИКАЛЬНОЕ ФОТО: вверху арка, внизу прямоугольные грани */
+    border-radius: 100px 8px 0 0;
+    
+    /* БЕЛАЯ ОБВОДКА */
+    border: 6px solid white;
+    
+    /* Тень */
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    
+    /* Стилизация */
     filter: brightness(1.02) contrast(0.97) saturate(0.9) sepia(0.06);
 }
 
@@ -452,72 +463,66 @@
 
 .photo-deco {
     text-align: center;
-    margin-top: 2rem;
-    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    font-size: 1rem;
     color: #E8D5C0;
     opacity: 0.35;
     letter-spacing: 0.5rem;
 }
 
-@media(max-width:768px) {
-    .photo-wrapper img {
-        height: auto;
-        max-height: 78vh;
-        width: 86vw;
-        border-radius: 50% 50% 0 0;
-        border: 6px solid white;
-    }
-}
-
-/* Мобильная адаптация */
+/* Для планшетов */
 @media(max-width: 768px) {
-    .invite-text-section {
-        padding: 4rem 1rem;
-    }
-    
-    .greeting-title {
-        font-size: 1.6rem;
-    }
-    
-    .greeting-name {
-        font-size: 2.2rem;
-    }
-    
-    .photo-wrapper img {
-        height: auto;
-        max-height: 78vh;
-        width: 86vw;
-        border-radius: 80px 8px 0 0;
-        border: 6px solid white;
-    }
-}
-
-@media(max-width: 480px) {
-    .invite-text-section {
-        padding: 3rem 0.5rem;
-    }
-    
-    .greeting-title {
-        font-size: 1.4rem;
-    }
-    
-    .greeting-name {
-        font-size: 1.8rem;
-    }
-    
-    .fleuron {
-        font-size: 1.5rem;
-    }
-    
     .photo-section {
-        padding: 3rem 0.5rem 5rem;
+        padding: 3rem 1rem 5rem;
     }
     
     .photo-wrapper img {
-        border-radius: 60px 6px 0 0;
+        max-height: 65vh;
+        width: 85vw;
+        border-radius: 80px 6px 0 0;
         border: 5px solid white;
     }
 }
+
+/* Для телефонов */
+@media(max-width: 480px) {
+    .photo-section {
+        padding: 2rem 0.5rem 4rem;
+        min-height: 40vh;
+    }
+    
+    .photo-wrapper {
+        width: 100%;
+    }
+    
+    .photo-wrapper img {
+        max-height: 60vh;
+        width: 95vw;
+        max-width: 350px;
+        border-radius: 60px 4px 0 0;
+        border: 4px solid white;
+    }
+    
+    .photo-deco {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Для очень маленьких экранов */
+@media(max-width: 360px) {
+    .photo-section {
+        padding: 1.5rem 0.5rem 3rem;
+    }
+    
+    .photo-wrapper img {
+        max-height: 50vh;
+        width: 95vw;
+        border-radius: 50px 3px 0 0;
+        border: 3px solid white;
+    }
+}
+
         /* ===== КАЛЕНДАРЬ ===== */
 .calendar-section {
     padding: 5rem 1.5rem 6rem;
@@ -1686,7 +1691,6 @@ textarea::placeholder {
         <div class="photo-wrapper" id="photoWrapper">
             <img src="images/фото.JPG" alt="Фото пары" loading="lazy" />
         </div>
-        <div class="photo-deco">· · ❧ · ·</div>
     </div>
 </section>
 <!-- КАЛЕНДАРЬ -->
