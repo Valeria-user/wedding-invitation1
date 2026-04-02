@@ -75,147 +75,166 @@
             transform: translateY(0);
         }
 
-        /* ============================================ */
-        /* ===== ЗАСТАВКА С КОНВЕРТОМ (НАЧАЛО) ===== */
-        /* ============================================ */
-        .envelope-screen {
-            position: fixed;
-            inset: 0;
-            background: #e8d5e8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
+        /* ===== ЗАСТАВКА С КОНВЕРТОМ ===== */
+.envelope-screen {
+    position: fixed;
+    inset: 0;
+    background: #e8d5e8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
 
-        .envelope-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
-        }
+.envelope-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
 
-        .envelope {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            max-width: 640px;
-            max-height: 900px;
-            margin: auto;
-            cursor: pointer;
-        }
+.envelope {
+    position: relative;
+    width: 100%; /* Зам��нили 100vw на 100%, чтобы не было горизонтальной прокрутки */
+    height: 100dvh; /* Используем dvh - динамическая высота экрана для телефонов */
+    max-width: 640px;
+    max-height: 900px;
+    margin: auto;
+    cursor: pointer;
+    overflow: hidden; /* Прячем всё, что выходит за границы */
+}
 
-        /* Тело конверта - шоколадный контур */
-        .envelope-body {
-            position: absolute;
-            inset: 0;
-            background: #fff;
-            border: 14px solid #4A2C2A;
-            border-bottom: 20px solid #3C241F;
-            border-radius: 8px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
-            z-index: 1;
-        }
+/* Тело конверта */
+.envelope-body {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    border: 14px solid #4A2C2A;
+    border-bottom: 20px solid #3C241F;
+    border-radius: 8px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+    z-index: 1;
+}
 
-        /* Крышка конверта */
-        .envelope-flap {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 48%;
-            background: linear-gradient(#fff, #f8f4ed);
-            clip-path: polygon(0 0, 50% 100%, 100% 0);
-            z-index: 5;
-            transition: transform 1.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-origin: top;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-        }
+/* Крышка конверта */
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 48%;
+    background: linear-gradient(#fff, #f8f4ed);
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    z-index: 5;
+    transition: transform 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+}
 
-        .envelope.open .envelope-flap {
-            transform: rotateX(180deg);
-        }
+.envelope.open .envelope-flap {
+    transform: rotateX(180deg);
+}
 
-        /* Текст на закрытом конверте (шоколадный) */
-        .envelope-text {
-            position: absolute;
-            top: 48%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 6;
-            pointer-events: none;
-        }
+/* Текст на закрытом конверте */
+.envelope-text {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 6;
+    pointer-events: none;
+    width: 90%; /* Ограничиваем ширину текста на мобилке */
+}
 
-        .envelope-initials {
-            font-family: 'Great Vibes', cursive;
-            font-size: 5.8rem;
-            color: #4A2C2A;
-            line-height: 1;
-            margin-bottom: 10px;
-        }
+.envelope-initials {
+    font-family: 'Great Vibes', cursive;
+    font-size: 5.8rem;
+    color: #4A2C2A;
+    line-height: 1;
+    margin-bottom: 10px;
+}
 
-        .envelope-date {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.15rem;
-            font-weight: 400;
-            letter-spacing: 7px;
-            color: #4A2C2A;
-        }
+.envelope-date {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 7px;
+    color: #4A2C2A;
+    white-space: nowrap; /* Запрещаем перенос даты на две строчки */
+}
 
-        /* Чистый лист внутри (без текста) */
-        .letter {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 82%;
-            height: 62%;
-            background: #fff;
-            z-index: 2;
-            opacity: 0;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s;
-        }
+/* Чистый лист внутри */
+.letter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 82%;
+    height: 62%;
+    background: #fff;
+    z-index: 2;
+    opacity: 0;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s;
+}
 
-        .envelope.open .letter {
-            transform: translate(-50%, -50%) translateY(-150px);
-            opacity: 1;
-        }
+.envelope.open .letter {
+    transform: translate(-50%, -50%) translateY(-150px);
+    opacity: 1;
+}
 
-        /* Печать (фото PNG) */
-        .seal {
-            position: absolute;
-            top: 47%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 175px;
-            height: auto;
-            z-index: 7;
-            cursor: pointer;
-            transition: transform 0.3s ease, opacity 0.5s ease;
-            filter: drop-shadow(0 18px 40px rgba(0,0,0,0.45));
-        }
+/* Печать */
+.seal {
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 175px;
+    height: auto;
+    z-index: 7;
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.5s ease;
+    filter: drop-shadow(0 18px 40px rgba(0,0,0,0.45));
+}
 
-        .seal:hover {
-            transform: translate(-50%, -50%) scale(1.06);
-        }
+.seal:hover {
+    transform: translate(-50%, -50%) scale(1.06);
+}
 
-        .envelope.open .seal {
-            opacity: 0;
-            pointer-events: none;
-        }
+.envelope.open .seal {
+    opacity: 0;
+    pointer-events: none;
+}
 
-        @media(max-width: 768px) {
-            .envelope-initials {
-                font-size: 4.2rem;
-            }
-            .seal {
-                width: 145px;
-            }
-        }
-        /* ============================================ */
-        /* ===== ЗАСТАВКА С КОНВЕРТОМ (КОНЕЦ) ===== */
-        /* ============================================ */
+/* Спец. адаптация под маленькие экраны телефонов */
+@media(max-width: 480px) {
+    .envelope-body {
+        border-width: 8px; /* Делаем шоколадный контур чуть тоньше на телефонах */
+        border-bottom-width: 12px;
+    }
+
+    .envelope-initials {
+        font-size: 3.5rem; /* Уменьшаем размер А&О */
+    }
+
+    .envelope-date {
+        font-size: 0.9rem; /* Уменьшаем дату */
+        letter-spacing: 3px; /* Уменьшаем расстояние между цифрами, чтобы влезло */
+    }
+
+    .seal {
+        width: 130px; /* Уменьшаем саму печать */
+    }
+}
+
+@media(max-width: 768px) and (min-width: 481px) {
+    .envelope-initials {
+        font-size: 4.2rem;
+    }
+    .seal {
+        width: 145px;
+    }
+}
 
         /* ===== ОСНОВНОЙ КОНТЕНТ (скрыт до открытия конверта) ===== */
         .main-content {
