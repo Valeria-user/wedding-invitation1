@@ -1268,7 +1268,7 @@
         html {
             scroll-behavior: smooth;
         }
-        /* Обёртка, чтобы подсказка позиционировалась относительно конверта */
+/* Обёртка, чтобы подсказка позиционировалась относительно конверта */
 .envelope-stage{
     position: relative;
     width: 100vw;
@@ -1346,6 +1346,10 @@
 </head>
 
 <body>
+<!-- Музыкальный плеер -->
+<audio id="bgMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
 <div class="envelope-screen" id="envelopeScreen">
     <div class="envelope-stage">
         <div class="envelope" id="envelope">
@@ -1353,7 +1357,7 @@
 
             <div class="envelope-flap">
                 <div class="envelope-text">
-                    <div class="envelope-initials">А&О</div>
+                    <div class="envelope-initials">А & О</div>
                     <div class="envelope-date">05.09.2026</div>
                 </div>
             </div>
@@ -1366,6 +1370,8 @@
         <!-- ПОДСКАЗКА ПОД ПЕЧАТЬЮ -->
         <div class="open-hint" aria-hidden="true">
             <div class="open-hint__text">Открыть письмо</div>
+	    <div>--------------</div>
+	    <div class="open-hint__text">(Включите, пожалуйста, звук)</div>
             <div class="open-hint__arrow"></div>
         </div>
     </div>
@@ -2157,17 +2163,43 @@ ${presenceEmoji} *Присутствие:* ${presenceText}
 
     waxSeal.addEventListener('click', openEnvelope);
 
-    function openEnvelope() {
-        envelope.classList.add('open');
+function openEnvelope() {
+    const audio = document.getElementById('bgMusic');
+    
+    if (audio) {
+        audio.volume = 0; // Начинаем с тишины
+        audio.play().then(() => {
+            // Плавное нарастание громкости (Fade In)
+            let fadeAudio = setInterval(() => {
+                // Если громкость меньше 0.5 (50%), прибавляем по 0.05
+                // 0.5 — комфортная громкость для фона, можно поставить 1.0 для максимума
+                if (audio.volume < 0.5) {
+                    audio.volume = Math.min(audio.volume + 0.05, 0.5);
+                } else {
+                    clearInterval(fadeAudio);
+                }
+            }, 200); // Интервал шага нарастания (мс)
+        }).catch(error => {
+            console.log("Ошибка воспроизведения:", error);
+        });
+    }
+
+    // Логика открытия конверта
+    const envelope = document.getElementById('envelope');
+    const envelopeScreen = document.getElementById('envelopeScreen');
+    const mainContent = document.getElementById('mainContent');
+
+    envelope.classList.add('open');
+    
+    setTimeout(() => {
+        envelopeScreen.classList.add('hidden');
+        mainContent.classList.add('visible');
         
         setTimeout(() => {
-            envelopeScreen.classList.add('hidden');
-            mainContent.classList.add('visible');
-            setTimeout(() => {
-                envelopeScreen.style.display = 'none';
-            }, 800);
-        }, 1400);
-    }
+            envelopeScreen.style.display = 'none';
+        }, 800);
+    }, 1400);
+}
 </script>
 <!-- ===== КОНЕЦ СКРИПТОВ ===== -->
 </body>
