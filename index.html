@@ -36,6 +36,12 @@
             --text-color: #2C1810;
             --choco: #2E1A0E;
         }
+@font-face {
+    font-family: 'WeddingFont';
+    src: url('saint.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
 
         /* ===== ОБЩИЕ СТИЛИ ===== */
         * {
@@ -470,17 +476,14 @@
         padding: 2rem 1rem; /* Уменьшаем внешние отступы секции */
         max-width: 100%;
     }
-	.invite-text-section {
-        padding: 2rem 1rem; /* Уменьшаем внешние отступы секции */
-        max-width: 100%;
-    }
+
  .photo-wrapper {
         width: 100%;
         display: flex;
         justify-content: center;
     }
 
-     /* Секция с фото */
+    /* Секция с фото */
     .photo-section {
         padding: 1rem 0.5rem 5rem; /* Минимальный отступ сверху, больше снизу */
     }
@@ -501,6 +504,8 @@
         border: 6px solid white;
         box-shadow: 0 20px 50px rgba(0,0,0,0.4);
     }
+}
+
     .photo-frame-wrapper {
         max-width: 100%; /* Рамка занимает всю ширину экрана */
         width: 100%;
@@ -1436,6 +1441,74 @@
     .open-hint__text{ font-size: 0.8rem; letter-spacing: 0.18em; }
     .open-hint__arrow{ height: 48px; }
 }
+#envelopeScreen .envelope-initials, 
+#envelopeScreen .envelope-date {
+    font-family: 'WeddingFont', cursive !important;
+    color: #4A2C2A !important;
+    font-weight: 400 !important;
+    text-transform: none !important; /* Убираем капс, если он был */
+}
+
+.envelope-initials {
+    font-size: 11rem;
+    line-height: 0.8;
+    margin-bottom: 0;
+}
+
+.envelope-date {
+    font-size: 4rem;
+    letter-spacing: 2px;
+    margin-top: -10px;
+}
+/* 2. ГЛАВНЫЙ ЭКРАН (Hero - сразу после открытия) */
+.name-first, 
+.name-second {
+    color: #F5EDE4 !important; /* Светлый крем */
+    font-family: 'WeddingFont', cursive !important;
+    font-size: 13rem; /* Максимальный размер для имен на ПК */
+    line-height: 0.7; /* Сближаем строки, чтобы композиция была плотной */
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3); /* Усилили тень для объема */
+    margin: 0;
+}
+
+.name-and {
+    color: #F5EDE4 !important;
+    font-family: 'WeddingFont', cursive !important;
+    font-size: 6rem; /* Размер знака & */
+    margin: 10px 0;
+}
+
+.wedding-date {
+    color: #F5EDE4 !important;
+    font-family: 'WeddingFont', cursive !important;
+    font-size: 5.5rem; /* Размер даты под именами */
+    letter-spacing: 4px;
+    margin-top: 0;
+}
+
+/* 3. АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНА (Чтобы огромные буквы не вылезли за экран) */
+@media(max-width: 768px) {
+    .name-first, 
+    .name-second {
+        font-size: 8rem; /* Увеличенный размер для мобильного */
+        line-height: 0.8;
+    }
+    
+    .name-and {
+        font-size: 4rem;
+    }
+    
+    .wedding-date {
+        font-size: 3.5rem;
+        margin-top: 10px;
+    }
+
+    /* На всякий случай чуть увеличим отступ в Hero, чтобы текст не прилипал к краям */
+    .hero-content {
+        width: 100%;
+        padding: 0 10px;
+    }
+}
     </style>
 </head>
 
@@ -1451,7 +1524,7 @@
 
             <div class="envelope-flap">
                 <div class="envelope-text">
-                    <div class="envelope-initials">А & О</div>
+                    <div class="envelope-initials">О & А</div>
                     <div class="envelope-date">05.09.2026</div>
                 </div>
             </div>
@@ -1689,7 +1762,7 @@
                     <span class="faq-icon">+</span>
                 </div>
                 <div class="faq-answer">
-                    Мы организуем для вас трансфер от места встречи до места торжества и обратно. Пожалуйста, укажите в анкете, нужен ли вам трансфер, чтобы мы забронировали автомобиль точного размера. Время и место сбора будет сообщено позже.
+                    Мы организуем для вас трансфер от г.Березино до места торжества и обратно. Пожалуйста, укажите в анкете, нужен ли вам трансфер, чтобы мы забронировали автомобиль точного размера. Время и место сбора будет сообщено позже.
                 </div>
             </div>
             <div class="faq-item">
