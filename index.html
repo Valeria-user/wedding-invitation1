@@ -470,6 +470,32 @@
         padding: 2rem 1rem; /* Уменьшаем внешние отступы секции */
         max-width: 100%;
     }
+	.invite-text-section {
+        padding: 2rem 1rem; /* Уменьшаем внешние отступы секции */
+        max-width: 100%;
+    }
+.photo-section {
+        padding: 2rem 0.5rem 4rem; /* Немного уменьшим отступы вокруг */
+    }
+ .photo-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .photo-wrapper img {
+        width: 92vw; /* Занимает почти всю ширину экрана */
+        height: 65vh; /* Фиксируем высоту, чтобы фото было вытянутым и заполняло рамку */
+        
+        /* ГЛАВНОЕ ИЗМЕНЕНИЕ */
+        object-fit: cover; /* Фото будет обрезано по краям, но заполнит всё пространство рамки */
+        object-position: center 20%; /* Смещаем акцент чуть выше центра, чтобы лица не обрезались */
+        
+        border-radius: 50% 50% 0 0; /* Сохраняем форму арки */
+        border: 6px solid white;
+        max-height: none; /* Убираем ограничения, если они были */
+    }
+
 
     .photo-frame-wrapper {
         max-width: 100%; /* Рамка занимает всю ширину экрана */
