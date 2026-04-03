@@ -1486,28 +1486,54 @@
     margin-top: 0;
 }
 
-/* 3. АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНА (Чтобы огромные буквы не вылезли за экран) */
-@media(max-width: 768px) {
-    .name-first, 
-    .name-second {
-        font-size: 8rem; /* Увеличенный размер для мобильного */
-        line-height: 0.8;
-    }
-    
-    .name-and {
-        font-size: 4rem;
-    }
-    
-    .wedding-date {
-        font-size: 3.5rem;
-        margin-top: 10px;
+/* 3. АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНА (Исправлено под Saint Amour) */
+@media(max-width: 480px) {
+    /* --- Конверт на телефоне --- */
+    .envelope-initials { 
+        font-size: 5.2rem !important; /* Уменьшили, чтобы А&О не вылезали за края */
+        line-height: 0.9 !important;
+        margin-bottom: 5px !important;
     }
 
-    /* На всякий случай чуть увеличим отступ в Hero, чтобы текст не прилипал к краям */
-    .hero-content {
-        width: 100%;
-        padding: 0 10px;
+    .envelope-date { 
+        font-size: 1.6rem !important; /* Уменьшили дату */
+        letter-spacing: 2px !important; /* Сузили межбуквенное расстояние */
+        margin-top: 0 !important;
     }
+
+    /* Чтобы текст точно не касался краев шоколадной рамки */
+    .envelope-text {
+        width: 100%;
+        padding: 0 35px; 
+    }
+
+    /* --- Основной сайт на телефоне --- */
+    .name-first, 
+    .name-second { 
+        font-size: 5.5rem !important; /* Имена после открытия */
+        line-height: 0.85 !important;
+    }
+    
+    .name-and { 
+        font-size: 3rem !important; 
+        margin: 5px 0 !important;
+    }
+    
+    .wedding-date { 
+        font-size: 2.2rem !important; 
+        letter-spacing: 2px !important;
+    }
+    
+    .greeting-name { 
+        font-size: 3.2rem !important; 
+    }
+}
+
+/* Для ОЧЕНЬ маленьких телефонов (типа iPhone SE) */
+@media(max-width: 360px) {
+    .envelope-initials { font-size: 4.5rem !important; }
+    .envelope-date { font-size: 1.4rem !important; }
+    .name-first, .name-second { font-size: 4.8rem !important; }
 }
     </style>
 </head>
