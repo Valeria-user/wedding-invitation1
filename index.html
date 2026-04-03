@@ -2168,13 +2168,14 @@ function openEnvelope() {
     
     if (audio) {
         audio.volume = 0; // Начинаем с тишины
+	const targetVolume = 0.25;
         audio.play().then(() => {
             // Плавное нарастание громкости (Fade In)
             let fadeAudio = setInterval(() => {
                 // Если громкость меньше 0.5 (50%), прибавляем по 0.05
                 // 0.5 — комфортная громкость для фона, можно поставить 1.0 для максимума
-                if (audio.volume < 0.5) {
-                    audio.volume = Math.min(audio.volume + 0.05, 0.5);
+                if (audio.volume < targetVolume) {
+                    audio.volume = Math.min(audio.volume + 0.01, targetVolume);
                 } else {
                     clearInterval(fadeAudio);
                 }
@@ -2200,6 +2201,7 @@ function openEnvelope() {
         }, 800);
     }, 1400);
 }
+
 </script>
 <!-- ===== КОНЕЦ СКРИПТОВ ===== -->
 </body>
