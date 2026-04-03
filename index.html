@@ -23,6 +23,7 @@
     
     <!-- ===== БИБЛИОТЕКИ (Tailwind CSS, GSAP) ===== -->
     <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <!-- ===== ВСЕ СТИЛИ CSS ===== -->
@@ -463,15 +464,65 @@
             letter-spacing: 0.5rem;
         }
 
-        @media(max-width: 768px) {
-            .photo-wrapper img {
-                height: auto;
-                max-height: 78vh;
-                width: 86vw;
-                border-radius: 50% 50% 0 0;
-                border: 6px solid white;
-            }
-        }
+       /* ===== АДАПТАЦИЯ ПРИГЛАШЕНИЯ ДЛЯ ТЕЛЕФОНА ===== */
+@media(max-width: 768px) {
+    .invite-text-section {
+        padding: 2rem 1rem; /* Уменьшаем внешние отступы секции */
+        max-width: 100%;
+    }
+
+    .photo-frame-wrapper {
+        max-width: 100%; /* Рамка занимает всю ширину экрана */
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .frame-image {
+        width: 100%;
+        height: auto;
+        min-height: 450px; /* Фиксируем минимальную высоту для подложки */
+        object-fit: cover; /* Чтобы фото-рамка не сплющивалась */
+    }
+
+    .frame-content {
+        width: 85%; /* Увеличиваем рабочую область текста внутри рамки */
+        padding: 1.5rem 1rem;
+        /* Усиливаем градиент подложки для читаемости на мелком экране */
+        background: radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(255, 255, 255, 0.9) 60%,
+            rgba(255, 255, 255, 0.5) 100%
+        );
+    }
+
+    .greeting-name {
+        font-size: 2.2rem; /* Уменьшаем размер имени */
+        margin-bottom: 1rem;
+    }
+
+    .invite-text-section p {
+        font-size: 0.95rem; /* Уменьшаем основной текст */
+        line-height: 1.6; /* Сжимаем межстрочный интервал */
+        margin-bottom: 1rem !important;
+    }
+}
+
+/* Для совсем маленьких экранов (iPhone SE и т.д.) */
+@media(max-width: 380px) {
+    .frame-content {
+        width: 90%;
+        padding: 1rem 0.5rem;
+    }
+    .greeting-name {
+        font-size: 1.8rem;
+    }
+    .invite-text-section p {
+        font-size: 0.85rem;
+    }
+}
 
         /* ===== КАЛЕНДАРЬ ===== */
 .calendar-section {
@@ -1095,6 +1146,19 @@
     line-height: 1.8;
     color: #F5EDE4; /* Очень светлый текст */
 }
+/* Стиль жемчужины-конфетти */
+.pearl-particle {
+    position: fixed;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    /* Перламутровый градиент */
+    background: radial-gradient(circle at 35% 35%, #ffffff 0%, #f0f0f0 40%, #d8d8d8 100%);
+    box-shadow: inset -1px -1px 3px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.15);
+    pointer-events: none;
+    z-index: 10001;
+    opacity: 1;
+}
 
         /* ===== ТАЙМЕР ОБРАТНОГО ОТСЧЁТА ===== */
         .countdown-section {
@@ -1364,7 +1428,7 @@
 
             <div class="letter"></div>
 
-            <img src="images/печать.png" alt="Печать" class="seal" id="waxSeal">
+            <img src="печать.png" alt="Печать" class="seal" id="waxSeal">
         </div>
 
         <!-- ПОДСКАЗКА ПОД ПЕЧАТЬЮ -->
@@ -1620,7 +1684,7 @@
             <div class="rsvp-line"></div>
         </div>
         <p class="rsvp-text">Просим подтвердить своё присутствие на мероприятии до:</p>
-        <p class="rsvp-date">15 / 07 / 26</p>
+        <p class="rsvp-date">30 / 04 / 26</p>
     </section>
 
     <!-- ===== ФОРМА ПОДТВЕРЖДЕНИЯ ===== -->
@@ -2102,6 +2166,12 @@ ${presenceEmoji} *Присутствие:* ${presenceText}
                 if (thankYouText) {
                     if (presence === 'yes') {
                         thankYouText.innerHTML = 'Мы получили ваш ответ<br>и очень ждём встречи с вами!';
+    console.log("Запуск жемчужин...");
+    // Прямой вызов функции
+    createPearls(); 
+    
+    // Дополнительный залп через полсекунды для надежности
+    setTimeout(createPearls, 500);
                     } else if (presence === 'maybe') {
                         thankYouText.innerHTML = 'Спасибо за ответ!<br>Ждём вашего подтверждения.';
                     } else {
@@ -2111,8 +2181,9 @@ ${presenceEmoji} *Присутствие:* ${presenceText}
                 
                 // ===== ЖЕМЧУЖИНЫ ПРИ "ДА" =====
                 if (presence === 'yes') {
-                    createPearls();
-                }
+    // Запускаем взрыв жемчужин через 200мс после появления блока
+    setTimeout(createPearls, 200);
+}
                 
                 setTimeout(() => {
                     secretMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2129,26 +2200,35 @@ ${presenceEmoji} *Присутствие:* ${presenceText}
 
     // ===== АНИМАЦИЯ ЖЕМЧУЖИН =====
     function createPearls() {
-        for (let i = 0; i < 25; i++) {
-            setTimeout(() => {
-                const pearl = document.createElement('div');
-                pearl.className = 'pearl';
-                pearl.style.left = Math.random() * 100 + 'vw';
-                pearl.style.top = '-20px';
-                document.body.appendChild(pearl);
-                
-                pearl.animate([
-                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                    { transform: `translateY(100vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                ], {
-                    duration: Math.random() * 2000 + 2500,
-                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                });
-                
-                setTimeout(() => pearl.remove(), 5000);
-            }, i * 80);
-        }
+    if (typeof confetti !== 'function') {
+        console.error("Библиотека конфетти не загружена!");
+        return;
     }
+
+    const count = 200;
+    const defaults = {
+        origin: { y: 0.7 }, // Высота вылета (0.7 - чуть ниже центра)
+        shapes: ['circle'],
+        colors: ['#FFFFFF', '#FDFCFB', '#F5EDE4', '#E8D5C0'],
+        scalar: 1.2,
+        zIndex: 10000
+    };
+
+    function fire(particleRatio, opts) {
+        confetti({
+            ...defaults,
+            ...opts,
+            particleCount: Math.floor(count * particleRatio)
+        });
+    }
+
+    // Взрыв веером
+    fire(0.25, { spread: 26, startVelocity: 55 });
+    fire(0.2, { spread: 60 });
+    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+    fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+    fire(0.1, { spread: 120, startVelocity: 45 });
+}
 
     // ===== ИНИЦИАЛИЗАЦИЯ ПРИВЕТСТВИЯ =====
     document.addEventListener('DOMContentLoaded', function() {
@@ -2201,7 +2281,6 @@ function openEnvelope() {
         }, 800);
     }, 1400);
 }
-
 </script>
 <!-- ===== КОНЕЦ СКРИПТОВ ===== -->
 </body>
